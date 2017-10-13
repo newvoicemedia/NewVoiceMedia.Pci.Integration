@@ -1,0 +1,13 @@
+{
+	"files.exclude": {
+		".git": true,
+		".vs": true,
+		".vscode": true,
+		"bin": true,
+		"obj": true,
+		".gitignore": true,
+		"LICENSE": true,
+		"*.csproj": true,
+		"build.cmd": true
+	}
+}
