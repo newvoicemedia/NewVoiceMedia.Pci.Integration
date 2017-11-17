@@ -40,7 +40,7 @@ namespace NewVoiceMedia.Pci.Integration
 		public void Run(string[] args)
 		{
 			if (args.Length == 0)
-				args = new[] { nameof(Help) };
+				args = new[] { nameof(Help) }; //TODO: if no argument passed, run in interactive subshell mode
 			var commandName = MiscCharacters.Replace(args[0], "");
 			var command = _commands
 				.SingleOrDefault(m => string.Equals(m.Name, commandName, StringComparison.InvariantCultureIgnoreCase));

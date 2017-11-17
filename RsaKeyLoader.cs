@@ -1,10 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
 using System.Linq;
 using System.IO;
+using System.Reflection;
 
 namespace NewVoiceMedia.Pci.Integration
 {
@@ -22,43 +22,27 @@ namespace NewVoiceMedia.Pci.Integration
 		{
 			var xmlDoc = new XmlDocument();
 			xmlDoc.LoadXml(xmlString);
-			if (!xmlDoc.DocumentElement.Name.Equals("RSAKeyValue"))
-				throw new ArgumentException(
-					$"Invalid XML RSA key (root node is '{xmlDoc.DocumentElement.Name}' instead of 'RSAKeyValue')",
-					nameof(xmlString));
-
 			var nodes = xmlDoc.DocumentElement.ChildNodes.Cast<XmlNode>()
 				.ToDictionary(n => n.Name, n => Convert.FromBase64String(n.InnerText.Trim()));
-			rsa.ImportParameters(new RSAParameters
-			{
-				Exponent = nodes["Exponent"],
-				Modulus = nodes["Modulus"],
-				D = nodes.GetValueOrDefault("D"),
-				DP = nodes.GetValueOrDefault("DP"),
-				DQ = nodes.GetValueOrDefault("DQ"),
-				InverseQ = nodes.GetValueOrDefault("InverseQ"),
-				P = nodes.GetValueOrDefault("P"),
-				Q = nodes.GetValueOrDefault("Q")
-			});
+			object parameters = new RSAParameters(); //boxing needed to set values
+			foreach (var node in nodes)
+				parameters.GetType().GetField(node.Key).SetValue(parameters, node.Value);
+			rsa.ImportParameters((RSAParameters)parameters);
 		}
 		
 		public static string ToXmlString(RSA rsa, bool includePrivateParameters)
 		{
-			var rsaParameters = rsa.ExportParameters(includePrivateParameters);
+			var parameterValues = rsa.ExportParameters(includePrivateParameters);
 			var stringBuilder = new StringBuilder();
-			stringBuilder.Append("<RSAKeyValue>");
-			stringBuilder.Append("<Modulus>" + Convert.ToBase64String(rsaParameters.Modulus) + "</Modulus>");
-			stringBuilder.Append("<Exponent>" + Convert.ToBase64String(rsaParameters.Exponent) + "</Exponent>");
-			if (includePrivateParameters)
+			const string rootTagName = "RSAKeyValue";
+			stringBuilder.Append($"<{rootTagName}>");
+			var parameters = parameterValues.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public);
+			foreach (var parameter in parameters.Where(p => !p.IsNotSerialized || includePrivateParameters))
 			{
-				stringBuilder.Append("<P>" + Convert.ToBase64String(rsaParameters.P) + "</P>");
-				stringBuilder.Append("<Q>" + Convert.ToBase64String(rsaParameters.Q) + "</Q>");
-				stringBuilder.Append("<DP>" + Convert.ToBase64String(rsaParameters.DP) + "</DP>");
-				stringBuilder.Append("<DQ>" + Convert.ToBase64String(rsaParameters.DQ) + "</DQ>");
-				stringBuilder.Append("<InverseQ>" + Convert.ToBase64String(rsaParameters.InverseQ) + "</InverseQ>");
-				stringBuilder.Append("<D>" + Convert.ToBase64String(rsaParameters.D) + "</D>");
+				var base64 = Convert.ToBase64String((byte[]) parameter.GetValue(parameterValues));
+				stringBuilder.Append($"<{parameter.Name}>{base64}</{parameter.Name}>");
 			}
-			stringBuilder.Append("</RSAKeyValue>");
+			stringBuilder.Append($"</{rootTagName}>");
 			return stringBuilder.ToString();
 		}
 	}
