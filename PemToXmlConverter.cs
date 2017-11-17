@@ -8,29 +8,31 @@ using Org.BouncyCastle.Security;
 
 namespace NewVoiceMedia.Pci.Integration
 {
-    internal static class PemToXmlConverter
-    {
-        public static string Convert(Stream pemData)
-        {
-            var pemObject = new PemReader(new StreamReader(pemData)).ReadObject();
-            RSA key;
-            bool isPrivate;
-            if (pemObject is AsymmetricCipherKeyPair)
-            {
-                isPrivate = true;
-                key = DotNetUtilities.ToRSA((RsaPrivateCrtKeyParameters)((AsymmetricCipherKeyPair)pemObject).Private);
-            }
-            else if (pemObject is RsaKeyParameters)
-            {
-                isPrivate = false;
-                key = DotNetUtilities.ToRSA((RsaKeyParameters)pemObject);
-            }
-            else
-            {
-                throw new ArgumentException($"object is not PEM encoded RSA key (decoded: {pemObject.GetType().Name})", 
-                    nameof(pemData));
-            }
-            return RsaKeyLoader.ToXmlString(key, isPrivate);
-        }
-    }
+	internal static class PemToXmlConverter
+	{
+		public static string Convert(Stream pemData)
+		{
+			var pemObject = new PemReader(new StreamReader(pemData)).ReadObject();
+			RSA key;
+			bool isPrivate;
+			if (pemObject is AsymmetricCipherKeyPair)
+			{
+				isPrivate = true;
+				var privateKeyParams = ((AsymmetricCipherKeyPair)pemObject).Private;
+				key = DotNetUtilities.ToRSA((RsaPrivateCrtKeyParameters)privateKeyParams);
+			}
+			else if (pemObject is RsaKeyParameters)
+			{
+				isPrivate = false;
+				key = DotNetUtilities.ToRSA((RsaKeyParameters)pemObject);
+			}
+			else
+			{
+				throw new ArgumentException("object is not PEM encoded RSA key " + 
+					$"(decoded: {pemObject.GetType().Name})", 
+					nameof(pemData));
+			}
+			return RsaKeyLoader.ToXmlString(key, isPrivate);
+		}
+	}
 }

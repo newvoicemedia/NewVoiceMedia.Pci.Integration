@@ -52,12 +52,14 @@ namespace NewVoiceMedia.Pci.Integration
 			var contentType = "application/" + (payload.StartsWith('<') ? "xml" : "json");
 			using (var client = new HttpClient())
 			{
-				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(contentType));
+				client.DefaultRequestHeaders.Accept.Add(
+					new MediaTypeWithQualityHeaderValue(contentType));
 				var response = await SendRequest(client, uri, contentType, payload);
 				var pollingUrl = response.NextLocation;
 				progressTracker(response.Payload);
 				if (! SuccessfulStatusCodes.Contains(response.StatusCode))
-					throw new Exception($"Error has occured on first API request: HTTP response code {response.StatusCode}");
+					throw new Exception("Error has occured on first API request: " + 
+					                    $"HTTP response code {response.StatusCode}");
 				Uri finalResourceUrl = null;
 				while (finalResourceUrl == null)
 				{
@@ -69,12 +71,13 @@ namespace NewVoiceMedia.Pci.Integration
 			}
 		}
 
-		private static readonly ISet<HttpStatusCode> SuccessfulStatusCodes = new HashSet<HttpStatusCode>(new []
-		{ 
-			HttpStatusCode.OK, 
-			HttpStatusCode.Accepted, 
-			HttpStatusCode.SeeOther
-		});
+		private static readonly ISet<HttpStatusCode> SuccessfulStatusCodes = 
+			new HashSet<HttpStatusCode>(new []
+			{ 
+				HttpStatusCode.OK, 
+				HttpStatusCode.Accepted, 
+				HttpStatusCode.SeeOther
+			});
 
 		private class Response
 		{
@@ -83,7 +86,10 @@ namespace NewVoiceMedia.Pci.Integration
 			public HttpStatusCode StatusCode { get; set; }
 		}
 
-		private async Task<Response> SendRequest(HttpClient client, Uri uri, string contentType, string payload = null)
+		private async Task<Response> SendRequest(HttpClient client, 
+		                                         Uri uri, 
+		                                         string contentType, 
+		                                         string payload = null)
 		{
 			var timestamp = DateTime.UtcNow;
 			var method = payload == null ? HttpMethod.Get : HttpMethod.Post;
@@ -92,13 +98,18 @@ namespace NewVoiceMedia.Pci.Integration
 			client.DefaultRequestHeaders.Authorization = authorization;
 			HttpResponseMessage httpResponse;
 			if (payload != null)
-				httpResponse = await client.PostAsync(uri, new StringContent(payload, Encoding.UTF8, contentType));
+			{
+				var content = new StringContent(payload, Encoding.UTF8, contentType);
+				httpResponse = await client.PostAsync(uri, content);
+			}
 			else
 				httpResponse = await client.GetAsync(uri);
 			var locationHeader = httpResponse.Headers.Location;
 			return new Response
 			{
-				NextLocation = (locationHeader != null) ? new Uri(locationHeader.AbsoluteUri) : null,
+				NextLocation = (locationHeader != null) ? 
+					new Uri(locationHeader.AbsoluteUri) : 
+					null,
 				Payload = await httpResponse.Content.ReadAsStringAsync(),
 				StatusCode = httpResponse.StatusCode
 			};
@@ -118,7 +129,8 @@ namespace NewVoiceMedia.Pci.Integration
 				timestamp.ToString("yyyy-MM-ddTHH:mm:ss"));
 			var bytes = DigestEncoding.GetBytes(joinedString.ToLowerInvariant());
 			var signedDigest = _privateKey.SignData(bytes, HashAlgorithm, SignaturePadding);
-			return new AuthenticationHeaderValue("NVM", $"{_accountKey}:{Convert.ToBase64String(signedDigest)}");
+			return new AuthenticationHeaderValue(
+				"NVM", $"{_accountKey}:{Convert.ToBase64String(signedDigest)}");
 		}
 	}
 }

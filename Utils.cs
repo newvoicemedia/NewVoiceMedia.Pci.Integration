@@ -33,10 +33,10 @@ namespace NewVoiceMedia.Pci.Integration
 			var publicKey = RsaKeyLoader.FromXmlFile(publicKeyPath);
 			var testData = PaymentHandler.DigestEncoding.GetBytes("NewVoiceMedia Rulezzz");
 			var signature = privateKey.SignData(testData, 
-												PaymentHandler.HashAlgorithm, 
-												PaymentHandler.SignaturePadding);
+			                                    PaymentHandler.HashAlgorithm, 
+			                                    PaymentHandler.SignaturePadding);
 			return publicKey.VerifyData(testData, 
-				                        signature, 
+			                            signature, 
 			                            PaymentHandler.HashAlgorithm, 
 			                            PaymentHandler.SignaturePadding);
 		}
