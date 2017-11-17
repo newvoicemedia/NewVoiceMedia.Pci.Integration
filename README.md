@@ -1,7 +1,8 @@
 # NewVoiceMedia.Pci.Integration
 
 ## Introduction
-This project is created to help NewVoiceMedia customers integrate with payment api (PCI service). Can be used both as command line utility, as a library or as reference for own implementation. 
+This project is created to help NewVoiceMedia customers integrate with payment api (PCI service). 
+Can be used both as command line utility, as a library or as reference for own implementation. 
 
 ## Usage
 
@@ -20,16 +21,20 @@ Available commands (from public API `NewVoiceMedia.Pci.Integration.Utils`):
     check-ip         Checks external IP address of current machine
     help             Shows this help text
 
-To see list of parameters for each command, run `NewVoiceMedia.Pci.Integration help` (or check file `Utils.cs`). Parameters shown in `< >` are mandatory and have to be provided. Parameters in `[ = ]` are optional - if omitted, default value shown after `=` is used. 
-Run the exe file from terminal (e.g. `cmd.exe`) - either using it's full path or just name if you're already in it's directory. For parameters, either use absolute paths or relative to current directory. 
+To see list of parameters for each command, run `NewVoiceMedia.Pci.Integration help` (or check file `Utils.cs`). 
+Parameters shown in `< >` are mandatory and have to be provided. Parameters in `[ = ]` are optional - if omitted, default value shown after `=` is used. 
+Run the exe file from terminal (e.g. `cmd.exe`) - either using it's full path or just name if you're already in it's directory. 
+For parameters, either use absolute paths or relative to current directory. 
 Example usages:
 
     NewVoiceMedia.Pci.Integration send-request agol4ebio20 SagePay payload.json "payments1.nvminternal.net"
     C:\_work\nvm\NewVoiceMedia.Pci.Integration.exe send-request agol4ebio20 SagePay ..\requests\payload-1.json "payments1.nvminternal.net"
 
-In the first example, current directory is the one containing files `NewVoiceMedia.Pci.Integration.exe` and `payload.json`. Command can be ran from other directory, but then one will have to use proper paths.
+In the first example, current directory is the one containing files `NewVoiceMedia.Pci.Integration.exe` and `payload.json`. 
+Command can be ran from other directory, but then one will have to use proper paths.
 In the second example, current directory does not matter as we are using paths (here: absolute for .exe and relative for .json).
 
 ## Build
-To build from sources, execute `build.cmd` (no parameters needed). Application will be built to directory `/publish`. Default target platform is 64bit Windows - to change this, change `--runtime` parameter in the script. 
+To build from sources, execute `build.cmd` (no parameters needed). Application will be built to directory `/publish`. 
+Default target platform is 64bit Windows - to change this, change `--runtime` parameter in the script. 
 Application is self-contained - `.NET Core 2.0+` is needed only for build, but not for running it.
