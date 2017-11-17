@@ -3,3 +3,5 @@ obj
 publish
 .vs
 *.sln
+.idea
+NewVoiceMedia.Pci.Integration.zip

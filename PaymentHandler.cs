@@ -13,11 +13,11 @@ namespace NewVoiceMedia.Pci.Integration
 	public class PaymentHandler
 	{
 		public const int ProtocolVersion = 1;
-		private const string TransportProtocol = "https://";
 		public static readonly HashAlgorithmName HashAlgorithm = HashAlgorithmName.SHA1;
 		public static readonly RSASignaturePadding SignaturePadding = RSASignaturePadding.Pkcs1;
 		public static readonly Encoding DigestEncoding = Encoding.UTF8;
 		public const int KeySize = 4096;
+		private const string TransportProtocol = "https://";
 
 		private readonly string _accountKey;
 		private readonly Gateway _gateway;
@@ -52,6 +52,7 @@ namespace NewVoiceMedia.Pci.Integration
 			var contentType = "application/" + (payload.StartsWith('<') ? "xml" : "json");
 			using (var client = new HttpClient())
 			{
+				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(contentType));
 				var response = await SendRequest(client, uri, contentType, payload);
 				var pollingUrl = response.NextLocation;
 				progressTracker(response.Payload);
@@ -87,7 +88,6 @@ namespace NewVoiceMedia.Pci.Integration
 			var timestamp = DateTime.UtcNow;
 			var method = payload == null ? HttpMethod.Get : HttpMethod.Post;
 			var authorization = Sign(method, uri, payload ?? String.Empty, timestamp);
-			client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(contentType));
 			client.DefaultRequestHeaders.Date = timestamp;
 			client.DefaultRequestHeaders.Authorization = authorization;
 			HttpResponseMessage httpResponse;

@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace NewVoiceMedia.Pci.Integration
 {
-	public class Utils
+	public static class Utils
 	{
 		[Command("Writes new generated key pair to given paths")]
 		public static string GenerateKeys(string privateKeyPath = "private-key.xml", string publicKeyPath = "public-key.xml")
