@@ -46,6 +46,12 @@ namespace NewVoiceMedia.Pci.Integration
 
 		public async Task<string> MakePayment(string payload, Action<string> progressTracker = null)
 		{
+			if (payload == null)
+				throw new ArgumentNullException(nameof(payload));
+			payload = payload.Trim();
+			if (!(payload.StartsWith("{") && payload.EndsWith("}")) && 
+			    !(payload.StartsWith("<") && payload.EndsWith(">")))
+				throw new ArgumentException($"json or xml expected", nameof(payload));
 			progressTracker = progressTracker ?? (s => { });
 			var query = $"/v{ProtocolVersion}/{_accountKey}/Payment/{_gateway}";
 			var uri = new Uri($"{TransportProtocol}{_hostname}{query}");
