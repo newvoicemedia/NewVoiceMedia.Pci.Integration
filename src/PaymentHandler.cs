@@ -37,9 +37,9 @@ namespace NewVoiceMedia.Pci.Integration
 
 		public PaymentHandler(string accountKey,
 		                      Gateway gateway, 
-							  string hostname, 
-							  RSA privateKey, 
-							  TimeSpan pollingInterval = default(TimeSpan))
+		                      string hostname, 
+		                      RSA privateKey, 
+		                      TimeSpan pollingInterval = default(TimeSpan))
 		{
 			if (privateKey.KeySize != KeySize)
 				throw new ArgumentException($"required key size {KeySize}", nameof(privateKey));
