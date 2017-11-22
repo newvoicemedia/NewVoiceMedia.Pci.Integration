@@ -89,7 +89,7 @@ namespace NewVoiceMedia.Pci.Integration
 		{
 			var payload = File.ReadAllText(payloadPath).Trim();
 			var privateKey = RsaKeyLoader.FromXmlFile(privateKeyPath);
-			var handler = new PaymentHandler(accountKey, gateway, hostname, privateKey);
+			var handler = new PaymentHandler(accountKey, gateway, hostname, privateKey, TimeSpan.FromSeconds(1));
 			return await handler.MakePayment(payload, Console.WriteLine);
 		}
 
@@ -105,7 +105,7 @@ namespace NewVoiceMedia.Pci.Integration
 			while ((line = Console.ReadLine()) != null)
 				payload.AppendLine(line);
 			var privateKey = RsaKeyLoader.FromXmlFile(privateKeyPath);
-			var handler = new PaymentHandler(accountKey, gateway, hostname, privateKey);
+			var handler = new PaymentHandler(accountKey, gateway, hostname, privateKey, TimeSpan.FromSeconds(1));
 			return await handler.MakePayment(payload.ToString(), Console.WriteLine);
 		}
 

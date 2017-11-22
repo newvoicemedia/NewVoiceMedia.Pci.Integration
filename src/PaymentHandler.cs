@@ -23,6 +23,7 @@ namespace NewVoiceMedia.Pci.Integration
 		private readonly Gateway _gateway;
 		private readonly string _hostname;
 		private readonly RSA _privateKey;
+		private TimeSpan _pollingInterval;
 
 		public enum Gateway
 		{
@@ -34,7 +35,11 @@ namespace NewVoiceMedia.Pci.Integration
 			Generic
 		}
 
-		public PaymentHandler(string accountKey, Gateway gateway, string hostname, RSA privateKey)
+		public PaymentHandler(string accountKey,
+		                      Gateway gateway, 
+							  string hostname, 
+							  RSA privateKey, 
+							  TimeSpan pollingInterval = default(TimeSpan))
 		{
 			if (privateKey.KeySize != KeySize)
 				throw new ArgumentException($"required key size {KeySize}", nameof(privateKey));
@@ -42,6 +47,7 @@ namespace NewVoiceMedia.Pci.Integration
 			_gateway = gateway;
 			_hostname = hostname;
 			_privateKey = privateKey;
+			_pollingInterval = pollingInterval;
 		}
 
 		public async Task<string> MakePayment(string payload, Action<string> progressTracker = null)
@@ -69,6 +75,8 @@ namespace NewVoiceMedia.Pci.Integration
 				Uri finalResourceUrl = null;
 				while (finalResourceUrl == null)
 				{
+					if (_pollingInterval != default(TimeSpan))
+						await Task.Delay(_pollingInterval);
 					response = await SendRequest(client, pollingUrl, contentType);
 					finalResourceUrl = response.NextLocation;
 					progressTracker(response.Payload);
