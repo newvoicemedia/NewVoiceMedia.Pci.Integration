@@ -27,12 +27,22 @@ Run the exe file from terminal (e.g. `cmd.exe`) - either using it's full path or
 For parameters, either use absolute paths or relative to current directory. 
 Example usages:
 
-    NewVoiceMedia.Pci.Integration send-request agol4ebio20 SagePay payload.json "payments1.nvminternal.net"
+    NewVoiceMedia.Pci.Integration convert-keys private.pem public.pem
     C:\_work\nvm\NewVoiceMedia.Pci.Integration.exe send-request agol4ebio20 SagePay ..\requests\payload-1.json "payments1.nvminternal.net"
 
-In the first example, current directory is the one containing files `NewVoiceMedia.Pci.Integration.exe` and `payload.json`. 
+In the first example, current directory is the one containing files `NewVoiceMedia.Pci.Integration.exe`, `private.pem` and `public.pem`. 
 Command can be ran from other directory, but then one will have to use proper paths.
-In the second example, current directory does not matter as we are using paths (here: absolute for .exe and relative for .json).
+In the second example, current directory does not matter as we are using paths (here: absolute for `.exe` and relative for .json).
+
+## API documentation
+Command `send-request` facilitates access to API, taking care for things such as cryptographics signatures ans polling for final result. 
+To make API requests, you need to provide payment request serialized as XML or JSON. General API documentation can be found on [our wiki](https://newvoicemedia.atlassian.net/wiki/spaces/DP/pages/15172092/Mid-Call+IVR+API+Specification). 
+Content of request depends on chosen payment gateway. Details can be found here:
+ - [Realex](https://newvoicemedia.atlassian.net/wiki/spaces/DP/pages/99354891/Taking+payments+via+Realex)
+ - [SagePay](https://newvoicemedia.atlassian.net/wiki/spaces/DP/pages/72679688/Taking+payments+via+SagePay)
+ - [SmartPay](https://newvoicemedia.atlassian.net/wiki/spaces/DP/pages/205193810/Taking+payments+via+SmartPay)
+ - [WorldPay](https://newvoicemedia.atlassian.net/wiki/spaces/DP/pages/72679689/Taking+payments+via+WorldPay)
+ - [Worldpay Online](https://newvoicemedia.atlassian.net/wiki/spaces/DP/pages/234288808/Taking+payments+via+Worldpay+Online)
 
 ## Build
 To build from sources, execute `build.cmd` (no parameters needed). Application will be built to directory `/publish`. 
