@@ -1,4 +1,4 @@
-# NewVoiceMedia.Pci.Integration
+# NewVoiceMedia PCI Integration
 
 ## Introduction
 This project is created to help NewVoiceMedia customers integrate with payment api (PCI service). 
