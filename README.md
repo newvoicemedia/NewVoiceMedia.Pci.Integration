@@ -23,7 +23,9 @@ Available commands (from public API `NewVoiceMedia.Pci.Integration.Utils`):
 
 To see list of parameters for each command, run `NewVoiceMedia.Pci.Integration help` (or check file [Utils.cs](src/Utils.cs)). 
 Parameters shown in `< >` are mandatory and have to be provided. Parameters in `[ ]` are optional - if omitted, default value shown after `=` is used. 
+
 Download [NewVoiceMedia.Pci.Integration.zip](https://github.com/newvoicemedia/NewVoiceMedia.Pci.Integration/releases/download/v1.01/NewVoiceMedia.Pci.Integration.zip), unpack it and run the exe file from `Command Prompt`. For platforms different than 64bit Windows you need to use source files instead (see section [Build](#build)).
+
 Example usages:
 
     NewVoiceMedia.Pci.Integration convert-keys private.pem public.pem
@@ -43,6 +45,11 @@ Content of request depends on chosen payment gateway. Details can be found here:
  - [Worldpay Online](https://newvoicemedia.atlassian.net/wiki/spaces/DP/pages/234288808/Taking+payments+via+Worldpay+Online)
 
 ## Build
-To build from sources, execute `build.cmd` (no parameters needed). Application will be built to directory `/publish`. 
-Default target platform is 64bit Windows - to change this, change `--runtime` parameter in the script. 
-Application is self-contained - `.NET Core 2.0+` is needed only for build, but not for running it.
+To build application by yourself, you need `.NET Core 2.0+` installed (it is not required for running it).
+On 64 bit Windows, execute `build.cmd` (no parameters needed). Application will be built to directory `/publish`. 
+On other platforms, copy its content, change parameter `--runtime` and execute it in your shell. Available platforms:
+ - win-x86
+ - win-x64
+ - linux-x64
+ - osx-x64
+ - android
