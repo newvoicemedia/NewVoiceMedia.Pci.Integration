@@ -65,18 +65,12 @@ namespace NewVoiceMedia.Pci.Integration
 			                            PaymentHandler.SignaturePadding);
 		}
 
-		[Command("Convert PEM keys to XML keys")]
-		public static void ConvertKeys(string privateKeyPath = "private-key.pem", 
-		                               string publicKeyPath = "public-key.pem")
+		[Command("Convert RSA key from PEM to XML")]
+		public static void ConvertKey(string keyPath)
 		{
-			void ConvertToXml(string pemPath)
-			{
-				var newPath = Path.Combine(Path.GetDirectoryName(pemPath), 
-				                           Path.GetFileNameWithoutExtension(pemPath)+".xml");
-				File.WriteAllText(newPath, PemToXmlConverter.Convert(File.OpenRead(pemPath)));
-			}
-			ConvertToXml(privateKeyPath);
-			ConvertToXml(publicKeyPath);
+			var newPath = Path.Combine(Path.GetDirectoryName(keyPath), 
+										Path.GetFileNameWithoutExtension(keyPath)+".xml");
+			File.WriteAllText(newPath, PemToXmlConverter.Convert(File.OpenRead(keyPath)));
 		}
 
 		[Command("Sends payment request to server and returns response")]

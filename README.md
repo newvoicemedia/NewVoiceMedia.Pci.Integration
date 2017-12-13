@@ -15,7 +15,7 @@ Available commands (from public API `NewVoiceMedia.Pci.Integration.Utils`):
     check-keys       Checks whether given xml keys match each other (true) or not (false)
     sign-data        Signs given string with given private key and returns base64 encoded signature
     verify-signature Checks whether given signature matches given pair of data and public key (true) or not (false)
-    convert-keys     Convert PEM keys to XML keys (uses BouncyCastle)
+    convert-key      Convert RSA key from PEM to XML
     send-request     Sends payment request to server and returns response
     relay-request    Relays payment request from standard input to server and returns response
     check-ip         Checks external IP address of current machine
@@ -27,10 +27,10 @@ Run the exe file from terminal (e.g. `cmd.exe`) - either using it's full path or
 For parameters, either use absolute paths or relative to current directory. 
 Example usages:
 
-    NewVoiceMedia.Pci.Integration convert-keys private.pem public.pem
+    NewVoiceMedia.Pci.Integration convert-key public.pem
     C:\_work\nvm\NewVoiceMedia.Pci.Integration.exe send-request agol4ebio20 SagePay ..\requests\payload-1.json "payments1.nvminternal.net"
 
-In the first example, current directory is the one containing files `NewVoiceMedia.Pci.Integration.exe`, `private.pem` and `public.pem`. 
+In the first example, current directory is the one containing files `NewVoiceMedia.Pci.Integration.exe` and `public.pem`. 
 Command can be ran from other directory, but then one will have to use proper paths.
 In the second example, current directory does not matter as we are using paths (here: absolute for `.exe` and relative for .json).
 
